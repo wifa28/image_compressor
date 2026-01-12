@@ -152,128 +152,139 @@ export default function ImageCompressor() {
 
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-6 rounded-xl shadow-md w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
-          Image Compressor
+    <section>
+      <div>
+        <h1 className="text-4xl font-extrabold text-center">
+          Compress images in seconds
         </h1>
 
-        {!compressedBlob && (
-          <>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="hidden"
-              id="fileInput"
-            />
+        <p className="mt-3 text-center text-gray-600">
+          Upload once. Done in seconds.
+        </p>
+      </div>
+      <div className="mt-10 flex justify-center px-4 py-8">
+        <div className="w-full max-w-md bg-white border border-[#6E026F]/20 p-6 rounded-xl shadow-md">
+          <h1 className="text-3xl font-bold text-center mb-6 text-[#6E026F]">
+            Image Compressor
+          </h1>
 
-            <div
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-              onClick={() => {
-                if (!file) {
-                  fileInputRef.current?.click();
-                }
-              }}
-              className={`mb-4 border-2 border-dashed rounded-lg p-6 transition cursor-pointer text-center
-                ${isDragging || !!file
-                  ? "border-blue-500 bg-blue-50 text-blue-600"
-                  : "border-gray-300 text-gray-500 hover:border-blue-500 hover:text-blue-600"
-                }
-              `}
-            >
-              {preview && (
-                <div className="relative flex justify-center mb-4">
-                  <button
-                    type="button"
-                    onClick={removeFile}
-                    className="absolute -top-2 -right-2 bg-white text-gray-600 rounded-full p-1 shadow hover:bg-red-500 hover:text-white transition enabled:cursor-pointer"
-                  >
-                    ✕
-                  </button>
-
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    className="max-h-64 rounded shadow"
-                  />
-                </div>
-              )}
-
-              {file ? file.name : "Klik atau drag & drop gambar di sini"}
-            </div>
-
-            {error ? (
-              <p className="mb-4 text-red-500 text-sm mt-4 text-center">
-                {error}
-              </p>
-            ) : (
-              <p className="mb-4 text-xs text-gray-400 text-center mt-2">
-                JPG, PNG, WEBP • Maks 5MB
-              </p>
-            )}
-
-
-            <button
-              onClick={handleCompress}
-              disabled={!file || loading}
-              className="w-full bg-blue-500 text-white py-2 rounded-lg transition-all duration-200 enabled:hover:bg-blue-700 enabled:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? "Compressing..." : "Compress"}
-            </button>
-          </>
-        )}
-
-        {compressedBlob && (
-          <>
-            <div className="mb-4 border-2 border-dashed border-blue-500 bg-blue-50 rounded-lg p-6 transition cursor-pointer text-center">
-              <img
-                src={compressedPreview!}
-                alt="Compressed Preview"
-                className="block mx-auto max-h-64 rounded shadow"
+          {!compressedBlob && (
+            <>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+                id="fileInput"
               />
 
-              {originalSize && (
-                <p className="text-gray-800 text-sm mt-4 text-center">
-                  Ukuran awal: {(originalSize / 1024).toFixed(1)} KB
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={() => {
+                  if (!file) {
+                    fileInputRef.current?.click();
+                  }
+                }}
+                className={`mb-4 border-2 border-dashed rounded-lg p-6 transition cursor-pointer text-center
+                ${isDragging || !!file
+                    ? "border-[#6E026F]/30 bg-purple-50 text-[#6E026F]"
+                    : "border-gray-300 text-gray-500 hover:border-[#6E026F] hover:text-[#6E026F]"
+                  }
+              `}
+              >
+                {preview && (
+                  <div className="relative flex justify-center mb-4">
+                    <button
+                      type="button"
+                      onClick={removeFile}
+                      className="absolute -top-2 -right-2 bg-white text-gray-600 rounded-full p-1 shadow hover:bg-red-500 hover:text-white transition enabled:cursor-pointer"
+                    >
+                      ✕
+                    </button>
+
+                    <img
+                      src={preview}
+                      alt="Preview"
+                      className="max-h-64 rounded shadow"
+                    />
+                  </div>
+                )}
+
+                {file ? file.name : "Klik atau drag & drop gambar di sini"}
+              </div>
+
+              {error ? (
+                <p className="mb-4 text-red-500 text-sm mt-4 text-center">
+                  {error}
+                </p>
+              ) : (
+                <p className="mb-4 text-xs text-gray-400 text-center mt-2">
+                  JPG, PNG, WEBP • Maks 5MB
                 </p>
               )}
-              <p className="text-gray-800 text-sm mt-4 text-center">
-                Ukuran hasil: {(compressedBlob.size / 1024).toFixed(1)} KB
-              </p>
-            </div>
-            <div className="flex gap-3 mt-4">
-              {/* Compress another — kiri */}
-              <button
-                onClick={removeFile}
-                className="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 enabled:cursor-pointer transition"
-              >
-                Compress another
-              </button>
 
-              {/* Download — kanan */}
-              <button
-                onClick={() => {
-                  if (!compressedBlob) return;
 
-                  const url = URL.createObjectURL(compressedBlob);
-                  const a = document.createElement("a");
-                  a.href = url;
-                  a.download = "compressed-image.jpg";
-                  a.click();
-                  URL.revokeObjectURL(url);
-                }}
-                className="flex-1 bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 enabled:cursor-pointer transition"
+              <button
+                onClick={handleCompress}
+                disabled={!file || loading}
+                className="w-full bg-[#6E026F] text-white py-2 rounded-lg transition-all duration-200 enabled:hover:bg-[#5a015c] enabled:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Download
+                {loading ? "Compressing..." : "Compress"}
               </button>
-            </div>
-          </>
-        )}
+            </>
+          )}
+
+          {compressedBlob && (
+            <>
+              <div className="mb-4 border-2 border-dashed border-blue-500 bg-blue-50 rounded-lg p-6 transition cursor-pointer text-center">
+                <img
+                  src={compressedPreview!}
+                  alt="Compressed Preview"
+                  className="block mx-auto max-h-64 rounded shadow"
+                />
+
+                {originalSize && (
+                  <p className="text-gray-800 text-sm mt-4 text-center">
+                    Ukuran awal: {(originalSize / 1024).toFixed(1)} KB
+                  </p>
+                )}
+                <p className="text-gray-800 text-sm mt-4 text-center">
+                  Ukuran hasil: {(compressedBlob.size / 1024).toFixed(1)} KB
+                </p>
+              </div>
+              <div className="flex gap-3 mt-4">
+                {/* Compress another — kiri */}
+                <button
+                  onClick={removeFile}
+                  className="flex-1 bg-gray-100 text-gray-700 hover:bg-gray-200 py-2 rounded-lg enabled:cursor-pointer transition"
+                >
+                  Compress another
+                </button>
+
+                {/* Download — kanan */}
+                <button
+                  onClick={() => {
+                    if (!compressedBlob) return;
+
+                    const url = URL.createObjectURL(compressedBlob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "compressed-image.jpg";
+                    a.click();
+                    URL.revokeObjectURL(url);
+                  }}
+                  className="flex-1 bg-emerald-500 text-white hover:bg-emerald-600 py-2 rounded-lg enabled:cursor-pointer transition"
+                >
+                  Download
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }   
